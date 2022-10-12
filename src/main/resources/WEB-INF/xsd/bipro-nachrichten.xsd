@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.bipro.net/namespace/nachrichten"
+	xmlns:nachr="http://www.bipro.net/namespace/nachrichten"
+	xmlns:basis="http://www.bipro.net/namespace/basis"
+	xmlns:mime="http://www.w3.org/2005/05/xmlmime"
+	xmlns:bipro="http://www.bipro.net/namespace"
+	xmlns:dt="http://www.bipro.net/namespace/datentypen"
+	targetNamespace="http://www.bipro.net/namespace/nachrichten"
+	elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xsd:annotation>
+		<xsd:appinfo>BiPRO Nachrichten -mit individuellen Anpassungen
+		</xsd:appinfo>
+	</xsd:annotation>
+	<xsd:import
+		namespace="http://www.bipro.net/namespace/datentypen"
+		schemaLocation="bipro-datentypen.xsd" />
+	<xsd:element name="BiproException">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="BiPROVersion" type="dt:ST_Version"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="Status" type="CT_Status"
+					minOccurs="1" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="CT_Meldung">
+
+		<xsd:sequence>
+			<xsd:element name="ArtID" type="dt:ST_Meldungsart"
+				minOccurs="1" maxOccurs="1">
+
+			</xsd:element>
+			<xsd:element name="MeldungID" type="dt:ST_Meldung"
+				minOccurs="1" maxOccurs="1">
+
+			</xsd:element>
+			<xsd:element name="Text" type="dt:ST_Text" minOccurs="0"
+				maxOccurs="1">
+
+			</xsd:element>
+			<xsd:element name="Quelle" type="dt:ST_Text"
+				minOccurs="0" maxOccurs="1">
+
+			</xsd:element>
+			<xsd:element name="Identifikationsnummer"
+				type="dt:ST_Text030" minOccurs="0" maxOccurs="1">
+
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="CT_Status">
+		<xsd:sequence>
+			<xsd:element name="ProzessID" type="dt:ST_ProzessID"
+				minOccurs="1" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="Zeitstempel" type="dt:ST_Zeitstempel"
+				minOccurs="1" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="StatusID" type="dt:ST_Status"
+				minOccurs="1" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="Gueltigkeitsende"
+				type="dt:ST_Zeitstempel" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="Schwebe" type="dt:ST_JaNein"
+				minOccurs="1" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="Meldung" type="CT_Meldung"
+				minOccurs="1" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
