@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:bipro="http://www.bipro.net/namespace"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soapbind="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                  targetNamespace="http://www.bipro.net/namespace"
+                  bipro:Name="SecurityTokenService.wsdl"
+                  bipro:Version="2.8.0.1.0">
+   <wsdl:types>
+      <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns="http://www.w3.org/2001/XMLSchema"
+                  version="1.0">
+         <xsd:import namespace="http://schemas.xmlsoap.org/ws/2005/02/trust"
+                     schemaLocation="xsd/ws-trust.xsd"/>
+      </xsd:schema>
+      <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns="http://www.w3.org/2001/XMLSchema"
+                  version="1.0">
+         <xsd:import namespace="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                     schemaLocation="xsd/ws-policy.xsd"/>
+      </xsd:schema>
+   </wsdl:types>
+   <wsdl:message name="RequestSecurityTokenRequest">
+      <wsdl:part name="parameters" element="wst:RequestSecurityToken"/>
+   </wsdl:message>
+   <wsdl:message name="RequestSecurityTokenResponse">
+      <wsdl:part name="parameters" element="wst:RequestSecurityTokenResponse"/>
+   </wsdl:message>
+   <wsdl:portType name="SecurityTokenServicePortType">
+      <wsdl:operation name="RequestSecurityToken">
+         <wsdl:documentation>
+Dieser Service gibt nach erfolgreicher Authentifizierung ein Security Token (Security Context Token) entsprechend Norm 410 bzw. 260.1 zurück. Die Authentifizierung kann dabei entweder mit Benutzername und Passwort oder mit einem VDG-Ticket erfolgen.
+			</wsdl:documentation>
+         <wsdl:input message="bipro:RequestSecurityTokenRequest" name="RequestSecurityTokenRequest"/>
+         <wsdl:output message="bipro:RequestSecurityTokenResponse"
+                      name="RequestSecurityTokenResponse"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="SecurityTokenServiceBinding" type="bipro:SecurityTokenServicePortType">
+      <soapbind:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsp:PolicyReference URI="#BiPROAuthSecurityPolicy"/>
+      <wsdl:operation name="RequestSecurityToken">
+         <soapbind:operation soapAction="urn:RequestSecurityToken" style="document"/>
+         <wsdl:input name="RequestSecurityTokenRequest">
+            <soapbind:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="RequestSecurityTokenResponse">
+            <soapbind:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="SecurityTokenService">
+      <wsdl:documentation>
+			Dieser Service stellt Funktionen für die einfache Authentifizierung zur Verfügung.
+		</wsdl:documentation>
+      <wsdl:port name="UserPasswordLogin" binding="bipro:SecurityTokenServiceBinding">
+         <wsdl:documentation>
+				Diese Funktion erledigt die Authentifizierung mit Benutzername und Passwort.
+			</wsdl:documentation>
+         <soapbind:address location="https://host/path/services/UserPasswordLogin"/>
+      </wsdl:port>
+      <wsdl:port name="VDGTicketLogin" binding="bipro:SecurityTokenServiceBinding">
+         <wsdl:documentation>
+				Diese Funktion erledigt die Authentifizierung mit einem VDG-Ticket.
+			</wsdl:documentation>
+         <wsp:PolicyReference URI="#VDGAuthPolicy"/>
+         <soapbind:address location="https://host/path/services/VDGTicketLogin"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

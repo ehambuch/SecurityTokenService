@@ -1,0 +1,15 @@
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns6:RequestSecurityTokenResponse xmlns:ns1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ns2="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns3="http://www.w3.org/2000/09/xmldsig#" xmlns:ns4="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:ns5="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:ns6="http://schemas.xmlsoap.org/ws/2005/02/trust">
+         <wst:RequestedSecurityToken xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust">
+            <wsc:SecurityContextToken xmlns:wsc="http://schemas.xmlsoap.org/ws/2005/02/sc" xmlns="http://schemas.xmlsoap.org/ws/2005/02/sc">
+               <wsc:Identifier>bipro:xxx</wsc:Identifier>
+            </wsc:SecurityContextToken>
+         </wst:RequestedSecurityToken>
+         <wst:Lifetime xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust">
+            <wsu:Created xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">2022-10-01T15:57:44</wsu:Created>
+            <wsu:Expires xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">2022-10-01T16:27:44</wsu:Expires>
+         </wst:Lifetime>
+      </ns6:RequestSecurityTokenResponse>
+   </S:Body>
+</S:Envelope>
