@@ -1,6 +1,5 @@
 package de.erichambuch.securitytokenservice.authfactories;
 
-import java.security.GeneralSecurityException;
 import java.util.Base64;
 
 import org.oasis_open.docs.wss._2004._01.oasis_200401_wss_wssecurity_secext_1_0.BinarySecurityTokenType;
@@ -20,13 +19,15 @@ public class VDGTicketSecurityHeader implements ISecurityHeaderFactory {
 	@Autowired
 	private BiproErrorCreator errorCreator;
 	
-	@Autowired VDGTicketControllerService ticketController;
+	@Autowired 
+	VDGTicketControllerService ticketController;
 	
 	private class VDGSecurityToken implements ISecurityHeader {
 		private final VDGTicket vdgTicket;
-		
-		VDGSecurityToken(VDGTicket ticket) {
+		private final String id;
+		VDGSecurityToken(VDGTicket ticket, String id) {
 			vdgTicket = ticket;
+			this.id= id;
 		}
 		
 		public VDGTicket getVDGTicket() {
@@ -43,6 +44,11 @@ public class VDGTicketSecurityHeader implements ISecurityHeaderFactory {
 				return new Credentials(vdgTicket.targetUserId);
 			} else
 				return null;
+		}
+
+		@Override
+		public String getId() {
+			return id;
 		}	
 	}
 
@@ -63,7 +69,7 @@ public class VDGTicketSecurityHeader implements ISecurityHeaderFactory {
 			throw new SoapClientException(errorCreator.createBiproExceptionForMeldungID("00961","Invalid ValueType of VDGTicket"));
 		try {
 			final VDGTicket ticket = ticketController.getTicket(Base64.getDecoder().decode(binaryToken.getValue()));
-			return new VDGSecurityToken(ticket);
+			return new VDGSecurityToken(ticket, binaryToken.getId());
 		} catch (IllegalArgumentException e) {
 			throw new SoapClientException(errorCreator.createBiproExceptionForMeldungID("00960","Cannot decrypt VDGTicket"));
 		}

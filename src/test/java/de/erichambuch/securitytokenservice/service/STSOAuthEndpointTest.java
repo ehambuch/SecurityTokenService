@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import de.erichambuch.securitytokenservice.authservices.LdapService;
-import de.erichambuch.securitytokenservice.service.STSOAuthEndpoint;
 import de.erichambuch.securitytokenservice.service.STSOAuthEndpoint.TokenResponse;
 
 /**

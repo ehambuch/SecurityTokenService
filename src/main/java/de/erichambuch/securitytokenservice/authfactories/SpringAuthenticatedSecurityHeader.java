@@ -33,4 +33,9 @@ public class SpringAuthenticatedSecurityHeader implements ISecurityHeaderFactory
 	public ISecurityHeader createFromSecurityHeader(SecurityHeader securityHeader) {
 		return new SpringAuthenticatedSecurityHeader();
 	}
+
+	@Override
+	public String getId() {
+		return null;
+	}
 }

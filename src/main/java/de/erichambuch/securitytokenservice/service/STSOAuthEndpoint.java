@@ -5,6 +5,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,8 @@ import de.erichambuch.securitytokenservice.authfactories.Credentials;
 import de.erichambuch.securitytokenservice.authfactories.ISecurityHeader;
 import de.erichambuch.securitytokenservice.authservices.LdapService;
 import de.erichambuch.securitytokenservice.config.STSConfiguration;
+import de.erichambuch.securitytokenservice.jpa.PersistentToken;
+import de.erichambuch.securitytokenservice.jpa.TokenRepository;
 import de.erichambuch.securitytokenservice.jwt.JWTService;
 
 /**
@@ -60,12 +63,21 @@ public class STSOAuthEndpoint {
 		public String toString() {
 			return "OAuthClient[user=" + userName + "]";
 		}
+
+		@Override
+		public String getId() {
+			return null;
+		}
 	}
 
 	@Autowired
 	private JWTService jwtService;
 
-	@RequestMapping(path = "/ws/oauth/token", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Autowired
+	private TokenRepository tokenRepository;
+	
+	@RequestMapping(path = "/ws/oauth/token", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Transactional(timeout = 30)
 	public ResponseEntity<TokenResponse> token(@RequestParam(name = "grant_type", required = true) String grant_type, 
 			@RequestParam(name="client_id", required=true) String client_id,
 			@RequestParam(name="client_secret", required=true) String client_secret)
@@ -74,13 +86,18 @@ public class STSOAuthEndpoint {
 		if ("client_credentials".equals(grant_type) && !isInvalidParam(client_id) && !isInvalidParam(client_secret)) {
 			ISecurityHeader security = new OAuthClientSecurityHeader(client_id, client_secret);
 			Credentials credentials = security.authenticate();
-			if (credentials != null)
+			if (credentials != null) {
+				final PersistentToken token = jwtService.generatePersistentToken(credentials.getUser());
+				if (configuration.isPersistTokens()) {
+					tokenRepository.saveAndFlush(token);
+				}
 				return ResponseEntity.ok().
 						cacheControl(CacheControl.noStore()).
 						body(
 								new TokenResponse(
-									jwtService.generateToken(credentials.getUser()), 
+									token.getJwt(), 
 									(int)configuration.getTokenLifetime()));
+			}
 			else
 				return ResponseEntity.status(HttpStatus.FORBIDDEN).cacheControl(CacheControl.noStore()).build();
 		} else

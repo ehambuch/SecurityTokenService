@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.xmlsoap.schemas.ws._2005._02.sc.SecurityContextToken;
 import org.xmlsoap.schemas.ws._2005._02.sc.SecurityContextTokenType;
 
 /**
@@ -24,13 +23,13 @@ public class SecurityHeader {
 	protected BinarySecurityTokenType binaryToken;
 
 	@XmlElement(name = "SecurityContextToken", required = false, namespace = "http://schemas.xmlsoap.org/ws/2005/02/sc")
-	protected SecurityContextToken securityContextToken;
+	protected SecurityContextTokenType securityContextToken;
 	
-	public SecurityContextToken getSecurityContextToken() {
+	public SecurityContextTokenType getSecurityContextToken() {
 		return securityContextToken;
 	}
 
-	public void setSecurityContextToken(SecurityContextToken securityContextToken) {
+	public void setSecurityContextToken(SecurityContextTokenType securityContextToken) {
 		this.securityContextToken = securityContextToken;
 	}
 

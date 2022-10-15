@@ -14,9 +14,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "RequestSecurityTokenResponse", propOrder = {
     "requestedSecurityToken",
     "lifetime",
-    "biproVersion",
     "tokenType",
-    "status"
+    "status",
+    "requestedTokenCancelled",
+    "biproVersion"
 })
 @XmlRootElement(name = "RequestSecurityTokenResponse", namespace="http://schemas.xmlsoap.org/ws/2005/02/trust")
 public class RequestSecurityTokenResponse {
@@ -25,13 +26,15 @@ public class RequestSecurityTokenResponse {
     protected RequestSecurityTokenType requestedSecurityToken;
     @XmlElement(name = "Lifetime", required = true)
     protected LifetimeType lifetime;
-    @XmlElement(name = "BiPROVersion", required = false, namespace = "http://www.bipro.net/namespace/nachrichten")
-    protected String biproVersion;
     @XmlElement(name = "TokenType", required=false)
     protected String tokenType;
     @XmlElement(name = "Status", required=false)
     protected Status status;
-    
+    @XmlElement(name = "RequestedTokenCancelled", required=false)
+    protected RequestedTokenCancelledType requestedTokenCancelled;
+    @XmlElement(name = "BiPROVersion", required = false, namespace = "http://www.bipro.net/namespace/nachrichten")
+    protected String biproVersion;
+   
     public String getBiproVersion() {
 		return biproVersion;
 	}
@@ -102,6 +105,14 @@ public class RequestSecurityTokenResponse {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public RequestedTokenCancelledType getRequestedTokenCancelled() {
+		return requestedTokenCancelled;
+	}
+
+	public void setRequestedTokenCancelled(RequestedTokenCancelledType requestedTokenCancelled) {
+		this.requestedTokenCancelled = requestedTokenCancelled;
 	}
 
 }

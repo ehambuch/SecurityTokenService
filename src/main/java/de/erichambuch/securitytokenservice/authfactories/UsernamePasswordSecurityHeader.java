@@ -28,10 +28,12 @@ public class UsernamePasswordSecurityHeader implements ISecurityHeaderFactory {
 		
 		private final String userName;
 		private final transient String password; // TODO besser byte arra
-		  
-		private UPWSecurityHeader(String user, String pwd) {
+		private final String id;
+		
+		private UPWSecurityHeader(String user, String pwd, String id) {
 			this.userName = user;
 			this.password = pwd;
+			this.id = id;
 		}
 		
 		@Override
@@ -46,6 +48,11 @@ public class UsernamePasswordSecurityHeader implements ISecurityHeaderFactory {
 		
 		public String toString() {
 			return "UsernamePassword[user="+userName+"]";
+		}
+
+		@Override
+		public String getId() {
+			return id;
 		}
 	}
 
@@ -79,7 +86,7 @@ public class UsernamePasswordSecurityHeader implements ISecurityHeaderFactory {
 		}
 		if ( password == null || "".equals(password) )
 			throw new SoapClientException(errorCreator.createBiproExceptionForMeldungID("00961","Invalid password"));
-		return new UPWSecurityHeader(userName, password);
+		return new UPWSecurityHeader(userName, password, securityHeader.getUsernameToken().getId());
 	}
 	
 }

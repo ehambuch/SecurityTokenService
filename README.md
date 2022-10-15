@@ -16,6 +16,7 @@ POST /ws/sts/UserPasswordLogin for a SOAP WS-Security with UsernamePasswort head
 POST /ws/sts/VDGTicketLogin for a SOAP WS-Security with a BinaryTicket (VDG Ticket), needs certain configuration of certificates
 POST /ws/sts/SpringAuthentication for a SOAP WS-Security when Spring already performed an authentication (via proxy or SSO)
 POST /ws/sts/ValidateToken for a SOAP WS-Security ticket validation
+POST /ws/sts/CancelToken for a SOAP WS-Security ticket cancellation
 ```
 
 Sample requests can be found in the _src/test/resorces/examples_ folder.
@@ -31,9 +32,11 @@ This application has been hardened for security reasons by several measures base
 | Cryptographic Failures | Use standard JDK and Spring Components | pom.xml |
 | XML External Entities (XXE) attack | Disabled per default | Testcase |
 
+I recommend to run the Spring Boot application with *Java Security Manager* in order to control all access to resources (files, network).
+
 ## Settings
 
-See *application.properties* for a description of all settings.
+See *application.properties* for a description of all settings. You will need a **LDAP server** for authentication and user storage as well as a **database** (could use H2 in-memory, but that's not recommended) to keep track of all issued tokens.
 
 ## License
 

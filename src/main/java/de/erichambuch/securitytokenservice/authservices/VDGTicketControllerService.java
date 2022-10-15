@@ -5,7 +5,10 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,8 @@ import de.erichambuch.securitytokenservice.config.STSConfiguration;
 
 @Service
 public class VDGTicketControllerService {
+	
+	private static final Logger LOGGER = Logger.getLogger(VDGTicketControllerService.class);
 	
 	/**
 	 * Private key of Pfefferminiza to decrypt ticket.
@@ -26,6 +31,9 @@ public class VDGTicketControllerService {
 	
 	private STSConfiguration configuration;
 	private VDGTicketUtils utils;
+	
+	@Autowired
+	private LdapService ldapService;
 	
 	@Autowired
 	public VDGTicketControllerService(STSConfiguration configuration, VDGTicketUtils utils) {
@@ -71,6 +79,20 @@ public class VDGTicketControllerService {
 	}
 
 	public boolean validateTicket(VDGTicket ticket) {
-		return true; // TODO
+		if(!ldapService.existsUser(ticket.targetUserId)) {
+			LOGGER.warnf("VDGTicket with unknown user: %s", ticket.targetUserId);
+			return false; 
+		}
+		if(ticket.authLevel < configuration.getVdgMinAuthLevel()) {
+			LOGGER.warnf("VDGTicket with low authLevel: %s of user %s", ticket.keyId, ticket.targetUserId);
+			return false; 
+		}
+		long timeIssue = ticket.issueTimestamp.toEpochSecond(ZoneOffset.UTC);
+		long now = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+		if(Math.abs(now-timeIssue) > configuration.getVdgMaximumTimeLeap()) {
+			LOGGER.warnf("VDGTicket with invalid issueTimestamp: %s of user %s", ticket.issueTimestamp, ticket.targetUserId);
+			return false;
+		}
+		return true;
 	}
 }

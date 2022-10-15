@@ -15,6 +15,9 @@ public class STSConfiguration {
 	@Value("${sts.expectedBiPROVersion}")
 	private String expectedBiproVersion;
 	
+	@Value("${sts.responseBiPROVersion}")
+	private String responseBiproVersion;
+	
 	@Value("${sts.tokenPrefix}")
 	private String tokenPrefix;
 	
@@ -48,15 +51,27 @@ public class STSConfiguration {
 	@Value("${sts.company.privatekey.password}")
 	private String privateKeyPassword;
 	
+	@Value("${sts.vdg.minAuthLevel}")
+	private int vdgMinAuthLevel = 1;
+	
+	@Value("${sts.vdg.maximumTimeLeap}")
+	private int vdgMaximumTimeLeap = 0;
+	
 	/**
 	 * Validity of a token in seconds.
 	 */
 	@Value("${sts.token_lifetime}")
 	private int tokenLifetime = 30*60;
 
+	@Value("${sts.persistTokens}")
+	private boolean persistTokens = false;
 	
 	public String getExpectedBiproVersion() {
 		return returnValueEmptyOrNotNull(expectedBiproVersion);
+	}
+	
+	public String getResponseBiproVersion() {
+		return returnValueEmptyOrNotNull(responseBiproVersion);
 	}
 	
 	public String getTokenPrefix() {
@@ -114,5 +129,16 @@ public class STSConfiguration {
 		return privateKeystorePassword != null ? privateKeystorePassword.toCharArray() : null;
 	}
 
+	public boolean isPersistTokens() {
+		return persistTokens;
+	}
+
+	public int getVdgMinAuthLevel() {
+		return vdgMinAuthLevel;
+	}
+
+	public int getVdgMaximumTimeLeap() {
+		return vdgMaximumTimeLeap;
+	}
 
 }
