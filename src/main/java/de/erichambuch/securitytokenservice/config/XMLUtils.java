@@ -76,4 +76,22 @@ public class XMLUtils {
 		}
 		return null;
 	}
+	
+	/**
+	 * Very primitive XML reader for simplified XML.
+	 * @param xml the XML input
+	 * @param element the Element
+	 * @return the content of the element or null
+	 */
+	public static String getContent(String xml, String element) {
+		final String openElement = "<"+element+">";
+		final String closeElement = "</"+element+">";
+		int from = xml.indexOf(openElement);
+		if (from <0 )
+			return null;
+		int to = xml.indexOf(closeElement, from+1);
+		if (to < 0 )
+			return null;	
+		return xml.substring(from+openElement.length(), to);
+	}
 }

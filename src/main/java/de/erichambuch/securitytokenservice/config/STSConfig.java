@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -72,6 +74,7 @@ public class STSConfig extends WsConfigurerAdapter {
 		validatingInterceptor.setValidateResponse(false);
 		validatingInterceptor.setXsdSchemaCollection(resourceSchemaCollection());
 		interceptors.add(validatingInterceptor);
+		interceptors.add(new TechnicalErrorInterceptor());
 	}
 
 	/**
@@ -119,17 +122,21 @@ public class STSConfig extends WsConfigurerAdapter {
 	@Bean
 	public Jaxb2Marshaller jaxb2Marshaller() {
 		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		Map<String, Object> jaxbContextProperties = new HashMap<>();
-		// TODO anders lösne
-		// jaxbContextProperties.put("com.sun.xml.internal.bind.namespacePrefixMapper",
-		// new BiproNamespacePrefixMapper());
-		marshaller.setJaxbContextProperties(jaxbContextProperties);
-		marshaller.setPackagesToScan(new String[] { "net.bipro.namespace", "net.bipro.namespace.datentypen",
+		Map<String,Object> properties = new HashMap<String, Object>();
+		// this property does seem to be supported in all JAXB versions, delete it if not working
+		properties.put("com.sun.xml.bind.namespacePrefixMapper", new BiproNamespacePrefixMapper()); 
+		marshaller.setMarshallerProperties(properties);
+		marshaller.setPackagesToScan(new String[] { 
+				"net.bipro.namespace", 
+				"net.bipro.namespace.datentypen",
 				"net.bipro.namespace.nachrichten",
 				"org.oasis_open.docs.wss._2004._01.oasis_200401_wss_wssecurity_secext_1_0",
 				"org.oasis_open.docs.wss._2004._01.oasis_200401_wss_wssecurity_utility_1_0",
-				"org.xmlsoap.schemas.ws._2004._08.addressing", "org.xmlsoap.schemas.ws._2005._02.sc",
-				"org.xmlsoap.schemas.ws._2004._09.policy", "org.xmlsoap.schemas.ws._2005._02.trust" });
+				"org.xmlsoap.schemas.ws._2004._08.addressing", 
+				"org.xmlsoap.schemas.ws._2005._02.sc",
+				"org.xmlsoap.schemas.ws._2004._09.policy", 
+				"org.xmlsoap.schemas.ws._2005._02.trust" });
 		return marshaller;
 	}
+	
 }

@@ -38,6 +38,23 @@ I recommend to run the Spring Boot application with *Java Security Manager* in o
 
 See *application.properties* for a description of all settings. You will need a **LDAP server** for authentication and user storage as well as a **database** (could use H2 in-memory, but that's not recommended) to keep track of all issued tokens.
 
+## Database
+
+Please set up and configure a database for the tokens using JDBC:
+
+```
+CREATE TABLE TOKENS (
+  ID VARCHAR2(36) PRIMARY KEY, 
+  TOKEN VARCHAR2(512) NOT NULL,
+  USERID VARCHAR2(30) NOT NULL,
+  ISSUEDAT TIMESTAMP NOT NULL,
+  EXPIRESAT TIMESTAMP NOT NULL,
+);
+```
+## Sample requests
+
+Please find some sample requests in *src/test/resources/examples*.
+	
 ## License
 
 This application is published under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)

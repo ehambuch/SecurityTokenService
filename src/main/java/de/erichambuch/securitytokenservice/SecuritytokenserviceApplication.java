@@ -5,9 +5,13 @@ import org.springframework.boot.actuate.autoconfigure.metrics.web.servlet.WebMvc
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 
-// TODO: besser Spring als Spring Boot nutzen, um minimale Konfig zu machen
-@SpringBootApplication(exclude = {WebMvcMetricsAutoConfiguration.class, SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class})
+/**
+ * Main Spring Boot application.
+ * <p>Although we are using Spring Boot, we disable certain auto configurations.</p>
+ */
+@SpringBootApplication(exclude = {WebMvcMetricsAutoConfiguration.class, SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class})
 public class SecuritytokenserviceApplication {
 
 	public static void main(String[] args) {

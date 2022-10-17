@@ -16,6 +16,9 @@ public class BiproNamespacePrefixMapper extends NamespacePrefixMapper {
 		PREFIX_MAP.put("http://www.bipro.net/namespace/datentypen", "dt");
 		PREFIX_MAP.put("http://www.bipro.net/namespace/nachrichten", "nachr");
 		PREFIX_MAP.put("http://schemas.xmlsoap.org/ws/2004/08/addressing", "wsa");
+		PREFIX_MAP.put("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "wsse");
+		PREFIX_MAP.put("http://schemas.xmlsoap.org/ws/2004/09/policy", "wsp");
+		PREFIX_MAP.put("http://schemas.xmlsoap.org/ws/2005/02/sc", "wsc");
 	}
 	
 	@Override

@@ -5,11 +5,13 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Persistent entity to store tokens into a database.
  */
 @Entity
+@Table(name = "TOKENS")
 public class PersistentToken {
 
 	@Id

@@ -22,6 +22,8 @@ import javax.crypto.Cipher;
 
 import org.springframework.stereotype.Service;
 
+import de.erichambuch.securitytokenservice.config.XMLUtils;
+
 /**
  * Utility class for handling VDG Tickets.
  */
@@ -69,16 +71,16 @@ public class VDGTicketUtils {
 	public VDGTicket parseTicket(byte[] inputStream) {
 		String xml = new String(inputStream, StandardCharsets.UTF_8);
 		VDGTicket ticket = new VDGTicket();
-		ticket.signedTicketInfo = getContent(xml, "TicketInfo");
-		ticket.ticketId = getContent(xml, "TicketId");
-		ticket.targetId = getContent(xml, "TargetId");
-		ticket.targetUserId = getContent(xml, "TargetUserId");
-		ticket.authLevel = Integer.parseInt(getContent(xml, "AuthLevel"));
-		ticket.issuerId = getContent(xml, "IssuerId");
-		ticket.issueTimestamp = LocalDateTime.parse(getContent(xml, "IssueTimestamp"), DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS'Z'"));
-		ticket.keyId = getContent(xml, "KeyId");
-		ticket.signatureValue = Base64.getDecoder().decode(getContent(xml, "SignatureValue"));
-		ticket.signatureAlgorithm = getContent(xml, "SignatureAlgorithm");
+		ticket.signedTicketInfo = XMLUtils.getContent(xml, "TicketInfo");
+		ticket.ticketId = XMLUtils.getContent(xml, "TicketId");
+		ticket.targetId = XMLUtils.getContent(xml, "TargetId");
+		ticket.targetUserId = XMLUtils.getContent(xml, "TargetUserId");
+		ticket.authLevel = Integer.parseInt(XMLUtils.getContent(xml, "AuthLevel"));
+		ticket.issuerId = XMLUtils.getContent(xml, "IssuerId");
+		ticket.issueTimestamp = LocalDateTime.parse(XMLUtils.getContent(xml, "IssueTimestamp"), DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS'Z'"));
+		ticket.keyId = XMLUtils.getContent(xml, "KeyId");
+		ticket.signatureValue = Base64.getDecoder().decode(XMLUtils.getContent(xml, "SignatureValue"));
+		ticket.signatureAlgorithm = XMLUtils.getContent(xml, "SignatureAlgorithm");
 		return ticket;
 	}
 	
@@ -86,21 +88,4 @@ public class VDGTicketUtils {
 		return checkSignature(ticket.signedTicketInfo.getBytes(StandardCharsets.UTF_8), ticket.signatureValue, ticket.signatureAlgorithm, publicKey);
 	}
 	
-	/**
-	 * Very primitive XML reader for simplified XML.
-	 * @param xml the XML input
-	 * @param element the Element
-	 * @return the content of the element or null
-	 */
-	private String getContent(String xml, String element) {
-		final String openElement = "<"+element+">";
-		final String closeElement = "</"+element+">";
-		int from = xml.indexOf(openElement);
-		if (from <0 )
-			return null;
-		int to = xml.indexOf(closeElement, from+1);
-		if (to < 0 )
-			return null;	
-		return xml.substring(from+openElement.length(), to);
-	}
 }
